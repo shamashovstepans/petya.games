@@ -526,7 +526,7 @@ body.game {
   .feature__title a:hover { text-decoration: underline; }
 }
 .feature__line { margin: 12px 0 0; font-size: clamp(17px, 1.7vw, 19px); line-height: 1.35; }
-.feature__actions { margin-top: 24px; }
+.feature__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 14px; margin-top: 24px; }
 .feature__note { margin: 12px 0 0; color: var(--soft); font-size: 14.5px; }
 
 /* ---------- Company structure (bottom of the library) ---------- */
