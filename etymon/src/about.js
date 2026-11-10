@@ -47,7 +47,7 @@ export function aboutHtml(K) {
     </ul>
 
     <h3 class="kn-h">The other views</h3>
-    <p class="kn-pp">The map and the 3D view show a core of 1,414 English words from 144 roots, written by hand from standard references: Watkins' dictionary of Indo-European roots, the Oxford English Dictionary, Etymonline and Wiktionary. Explore adds about 155,000 English and 11,500 Russian words from the same Wiktionary files. Those are marked ◇ and are not checked by hand either.</p>
+    <p class="kn-pp">The 3D view shows a core of 1,414 English words from 144 roots, written by hand from standard references: Watkins' dictionary of Indo-European roots, the Oxford English Dictionary, Etymonline and Wiktionary. Explore adds about 155,000 English and 11,500 Russian words from the same Wiktionary files. Those are marked ◇ and are not checked by hand either.</p>
 
     <h3 class="kn-h">Licence and credit</h3>
     <p class="kn-pp">Wiktionary's text is free to reuse under the ${link('https://creativecommons.org/licenses/by-sa/4.0/', 'Creative Commons Attribution-ShareAlike 4.0')} licence. The data shown here is derived from it and carries the same licence. The extracts are the work of kaikki.org: Tatu Ylonen, "Wiktextract: Wiktionary as Machine-Readable Structured Data", LREC 2022.</p>`;

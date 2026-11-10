@@ -27,7 +27,6 @@ export class SpaceUI {
       if (n) app.select(n);
       else app.go(() => app.setMode('explore'));
     });
-    $('sp-map').addEventListener('click', () => app.go(() => app.setMode('map')));
     const fam = $('sp-fam');
     fam.addEventListener('click', () => {
       const on = fam.getAttribute('aria-pressed') !== 'true';

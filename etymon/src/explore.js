@@ -4,7 +4,7 @@
 // the relatives you have not found yet are hidden behind hints.
 
 import { FAMILIES, FAMILY_ORDER, LANGS, timeToR, T_MAX } from './langs.js';
-import { LAWS } from './laws.js';
+import { LAWS, lawLabel } from './laws.js';
 
 // Big trees (imported roots can hold thousands of words) open around the selected
 // road: other branches stay folded, with a count, until you open them.
@@ -22,7 +22,7 @@ const norm = (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().tri
 const byId = (id) => document.getElementById(id);
 const isWord = (n) => n.lang === 'En' || n.lang === 'Ru';
 const keyOf = (n) => (n.lang === 'En' ? n.key : `${n.lang}:${n.form}`);
-// curated nodes can carry imported branches in xOut; the radial map never reads it
+// curated nodes can carry imported branches in xOut
 const outs = (n) => (n.xOut ? n.outEdges.concat(n.xOut) : n.outEdges);
 
 function h(tag, attrs = {}, ...kids) {
@@ -36,6 +36,15 @@ function h(tag, attrs = {}, ...kids) {
   for (const c of kids.flat()) if (c != null && c !== false) el.append(c.nodeType ? c : document.createTextNode(c));
   return el;
 }
+
+// when a form was in use, as far as its language tells
+const yearLabel = (n) => {
+  const y = n.date;
+  if (n.lang === 'PIE') return 'c. 4500–2500 BCE';
+  if (y < 0) return `c. ${Math.abs(y).toLocaleString('en-US')} BCE`;
+  if (n.dateExplicit && n.lang === 'En') return String(y);
+  return `c. ${y}`;
+};
 
 function sv(tag, attrs = {}, text) {
   const el = document.createElementNS(NS, tag);
@@ -172,8 +181,6 @@ export class Explore {
     input.addEventListener('blur', () => setTimeout(() => { list.hidden = true; }, 150));
     byId('ex-guess').addEventListener('click', () => this.setGuess(!this.guess));
     byId('ex-home').addEventListener('click', () => this.app.go(() => this.landing()));
-    byId('to-map').addEventListener('click', () => this.app.go(() => this.app.setMode('map')));
-    byId('ex-landing-map').addEventListener('click', () => this.app.go(() => this.app.setMode('map')));
     byId('to-3d').addEventListener('click', () => this.app.go(() => this.app.setMode('space', byId('ex-main').hidden ? null : this.sel)));
     byId('ex-landing-3d').addEventListener('click', () => this.app.go(() => this.app.setMode('space')));
     byId('ex-back').addEventListener('click', () => this.app.back());
@@ -317,6 +324,58 @@ export class Explore {
     this._toast = setTimeout(() => t.classList.remove('show'), miss ? 3200 : 3800);
   }
 
+  // The road of a word, step by step from its root: each form with its language and date, the
+  // sound laws that bent it on the way (press one to read what it did), and what is unsure.
+  road(path, target) {
+    const ol = h('ol', { class: 'road' });
+    // a sound law, told under the step it bent; pressing the same law again folds it away
+    const tell = (li, t) => {
+      const old = li.querySelector('.law-note');
+      if (old) {
+        const same = old.dataset.law === t;
+        old.remove();
+        if (same) return;
+      }
+      const law = LAWS[t] || {}, top = LAWS[law.parent] || law;
+      const name = top !== law && top.name ? `${top.name}: ${law.name}` : law.name || t;
+      const rule = top === law ? top.rule : law.ex;
+      li.querySelector('.tags').after(h('div', { class: 'step-note law-note', 'data-law': t },
+        h('b', {}, name), rule ? ` (${rule})` : '', top.desc ? `. ${top.desc}` : ''));
+    };
+    for (const { node, edge } of path) {
+      const lang = LANGS[node.lang];
+      const li = h('li', { class: `step fam-line-${node.isRoot && node.lang === 'PIE' ? 'root' : node.family}${node === target ? ' here' : ''}${node.imported || edge?.imported ? ' imp' : ''}` });
+      if (edge && edge.tags.length) {
+        const tags = h('div', { class: 'tags' });
+        for (const t of edge.tags) {
+          tags.append(h('button', { class: 'tag', type: 'button', title: 'What this sound law did', onclick: () => tell(li, t) }, lawLabel(t)));
+        }
+        li.append(tags);
+      }
+      if (edge && edge.imported) {
+        if (edge.how && edge.how !== 'inherited' && edge.how !== 'derived') li.append(h('span', { class: 'borrow' }, edge.how));
+      } else if (edge && edge.kind === 'borrow') li.append(h('span', { class: 'borrow' }, 'borrowed'));
+      li.append(
+        h('div', { class: 'step-head' },
+          h('button', { class: 'step-form', type: 'button', onclick: () => this.app.select(node) }, node.display),
+          h('span', { class: 'step-lang' }, node.isEn ? 'English' : lang.name),
+          node.imported ? h('span', { class: 'impmark', title: 'From Wiktionary, imported automatically: not hand-checked' }, '◇') : null),
+      );
+      const meta = [];
+      if (node.native) meta.push(node.native);
+      if (node.gloss && node !== target) meta.push(`"${node.gloss}"`);
+      if (!node.isEn) meta.push(yearLabel(node));
+      else if (node !== target && node.dateExplicit) meta.push(String(node.date));
+      if (node.died) meta.push(`died out c. ${node.died}`);
+      if (meta.length) li.append(h('div', { class: 'step-meta' }, meta.join(', ')));
+      if (node.note && node !== target && !node.isRoot) li.append(h('div', { class: 'step-note' }, node.note));
+      if (edge && edge.uncertain) li.append(h('div', { class: 'step-note uncertain' }, edge.imported ? 'Wiktionary marks this step as uncertain.' : 'This step is debated.'));
+      if (edge && edge.how === 'steps not recorded') li.append(h('div', { class: 'step-note' }, 'The steps between here and the root are not recorded in this import.'));
+      ol.append(li);
+    }
+    return ol;
+  }
+
   // ------------------------------------------------------------------ landing
   renderLanding() {
     const tryEl = byId('ex-try');
@@ -340,7 +399,7 @@ export class Explore {
     this.sel = null;
     byId('ex-landing').hidden = false;
     byId('ex-main').hidden = true;
-    this.app.writeHash('');
+    this.app.writeHash('explore');
     byId('ex-input').focus({ preventScroll: true });
   }
 
@@ -857,7 +916,7 @@ export class Explore {
       card.append(chain);
     }
     if (n.note && !n.isRoot) card.append(h('p', { class: 'exc-note' }, n.note));
-    if (!n.isRoot) card.append(this.app.ui.road(steps, n));
+    if (!n.isRoot) card.append(this.road(steps, n));
 
     // the same word reached from another root
     const others = (n.rootIds || []).filter((id) => id !== this.root.id);

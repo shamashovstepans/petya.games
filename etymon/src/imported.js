@@ -275,7 +275,7 @@ export class Imported {
         s.children.push(t);
         s.outEdges.push(e);
       } else {
-        (s.xOut ||= []).push(e); // a curated node: its own edges stay as they were, the map never sees these
+        (s.xOut ||= []).push(e); // a curated node: its own edges stay as they were, and only Explore reads these
       }
     }
     // colour: a stage of English takes the colour of the road it came by

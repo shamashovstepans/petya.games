@@ -21,7 +21,6 @@
   <link rel="stylesheet" href="styles.css">
   <link rel="modulepreload" href="src/about.js">
   <link rel="modulepreload" href="src/analysis.js">
-  <link rel="modulepreload" href="src/content.js">
   <link rel="modulepreload" href="src/explore.js">
   <link rel="modulepreload" href="src/imported.js">
   <link rel="modulepreload" href="src/kin-addr.js">
@@ -48,10 +47,8 @@
   <link rel="modulepreload" href="src/kin.js">
   <link rel="modulepreload" href="src/langs.js">
   <link rel="modulepreload" href="src/laws.js">
-  <link rel="modulepreload" href="src/layout.js">
   <link rel="modulepreload" href="src/main.js">
   <link rel="modulepreload" href="src/parse.js">
-  <link rel="modulepreload" href="src/render.js">
   <link rel="modulepreload" href="src/space-cam.js">
   <link rel="modulepreload" href="src/space-gl.js">
   <link rel="modulepreload" href="src/space-input.js">
@@ -59,8 +56,6 @@
   <link rel="modulepreload" href="src/space-layout.js">
   <link rel="modulepreload" href="src/space-ui.js">
   <link rel="modulepreload" href="src/space.js">
-  <link rel="modulepreload" href="src/ui.js">
-  <link rel="modulepreload" href="src/view.js">
   <link rel="modulepreload" href="data/index.js">
   <link rel="modulepreload" href="data/roots/beast.js">
   <link rel="modulepreload" href="data/roots/being.js">
@@ -83,51 +78,10 @@
   <meta name="twitter:card" content="summary_large_image">
 </head>
 <body>
-  <canvas id="base" aria-hidden="true"></canvas>
-  <canvas id="fx" role="img" aria-label="A radial graph of English. Proto-Indo-European roots sit at the centre; time runs outward; modern English words line the rim, each connected back to its root."></canvas>
-
-  <header class="masthead">
-    <h1>Etymon <button data-about class="info-btn" type="button" aria-label="About the data" title="About the data">i</button></h1>
-    <p>Six thousand years of English, grown from <span id="stat-roots">144</span> roots into <span id="stat-words">1,414</span> words.</p>
-    <button id="to-explore" class="mode-btn" type="button">Explore one word</button>
-    <button id="map-3d" class="mode-btn" type="button">See it in 3D</button>
-  </header>
-  <button id="map-back" class="map-back" type="button" aria-label="Back" hidden><span aria-hidden="true">←</span><span class="bk-t">Back</span></button>
-
-  <div class="search-wrap">
-    <input id="search" type="search" placeholder="Find a word" autocomplete="off" spellcheck="false" aria-label="Find a word" aria-controls="search-results">
-    <ul id="search-results" role="listbox" hidden></ul>
-  </div>
-
-  <button id="rail-toggle" class="rail-toggle" type="button">Laws and stories</button>
-  <aside id="rail" class="rail" aria-label="Lenses">
-    <nav id="rail-tabs" class="tabs" role="tablist"></nav>
-    <div id="rail-body" class="rail-body"></div>
-  </aside>
-
-  <aside id="journey" class="journey" hidden aria-label="Word journey">
-    <button id="journey-close" class="close" type="button" aria-label="Close">
-      <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-    </button>
-    <div id="journey-body"></div>
-  </aside>
-
-  <div id="caption" class="caption" aria-live="polite"></div>
-
-  <footer class="timeline">
-    <button id="play" class="play" type="button" aria-label="Play history">
-      <svg class="i-play" viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><path d="M6 4l10 6-10 6z" fill="currentColor"/></svg>
-      <svg class="i-pause" viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><path d="M5 4h3.5v12H5zM11.5 4H15v12h-3.5z" fill="currentColor"/></svg>
-    </button>
-    <div class="tl-main">
-      <div class="tl-labels"><span id="tl-year" class="tl-year">Now</span><span id="tl-era" class="tl-era"></span></div>
-      <div id="tl-track" class="tl-track" tabindex="0" role="slider" aria-label="Time" aria-valuemin="-4500" aria-valuemax="2025"></div>
-    </div>
-    <button id="skip" class="ghost" type="button" hidden>Skip to now</button>
-    <button id="home" class="ghost" type="button">Reset view</button>
-  </footer>
-
-  <div id="tooltip" class="tooltip" hidden></div>
+  <script>
+    // which view the address asks for, known before the code has loaded, so that the right one shows from the first moment
+    document.body.dataset.mode = /^#3d(-|$)/.test(location.hash) ? 'space' : /^(#languages(-|$)|#?$)/.test(location.hash) ? 'kin' : 'explore';
+  </script>
 
   <section id="explore" class="explore" aria-label="Explore one word">
     <div class="ex-head">
@@ -141,7 +95,6 @@
       <div class="ex-tools">
         <span id="ex-progress" class="ex-progress"></span>
         <button id="ex-guess" class="ex-toggle" type="button" aria-pressed="false">Guess mode</button>
-        <button id="to-map" class="ex-map" type="button">Whole map</button>
         <button id="to-3d" class="ex-map" type="button">3D</button>
         <button id="to-kin" class="ex-map" type="button">Languages</button>
       </div>
@@ -155,7 +108,6 @@
       <p id="ex-stats" class="ex-stats"></p>
       <div class="ex-landing-actions">
         <button id="surprise" class="primary" type="button">Show me a surprising word</button>
-        <button id="ex-landing-map" class="ghost" type="button">See the whole map</button>
         <button id="ex-landing-3d" class="ghost" type="button">Fly through it in 3D</button>
         <button id="ex-landing-kin" class="ghost" type="button">See how the languages cross</button>
       </div>
@@ -181,7 +133,6 @@
         <button id="sp-fam" class="ex-toggle" type="button" aria-pressed="false">Colour by family</button>
         <button id="sp-replay" class="ex-toggle" type="button">Replay growth</button>
         <button id="sp-explore" class="ex-map" type="button">Explore</button>
-        <button id="sp-map" class="ex-map" type="button">Map</button>
         <button id="sp-kin" class="ex-map" type="button">Languages</button>
       </div>
     </div>
@@ -189,7 +140,7 @@
     <div id="sp-legend" class="sp-legend" hidden></div>
     <p id="sp-hint" class="sp-hint" hidden>Drag to turn · scroll to fly in · click any word</p>
     <aside id="sp-card" class="sp-card" aria-live="polite" hidden></aside>
-    <p id="sp-fail" class="sp-fail" hidden>This view needs WebGL 2, which this browser did not provide. The map and Explore still work.</p>
+    <p id="sp-fail" class="sp-fail" hidden>This view needs WebGL 2, which this browser did not provide. Explore still works.</p>
   </section>
 
   <section id="kin" class="space kin" aria-label="Languages, and how they cross">
@@ -218,7 +169,7 @@
     <aside id="kn-card" class="sp-card kn-card" aria-live="polite" hidden></aside>
     <aside id="kn-panel" class="kn-panel" aria-label="Findings, the kinship table and the sound laws" hidden></aside>
     <p id="kn-load" class="sp-fail">Gathering the languages…</p>
-    <p id="kn-fail" class="sp-fail" hidden>This view needs WebGL 2, which this browser did not provide. The map and Explore still work.</p>
+    <p id="kn-fail" class="sp-fail" hidden>This view needs WebGL 2, which this browser did not provide. Explore still works.</p>
   </section>
 
   <div id="about" class="about" hidden></div>
