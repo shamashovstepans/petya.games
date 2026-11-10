@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Etymon</title>
+  <meta name="description" content="Where words come from. Follow one word back six thousand years to its root, or see 190 languages on one globe and how their words crossed.">
+  <meta name="theme-color" content="#07080d">
+  <script>
+    // a link straight into the Languages view: its data is asked for at once, not after the code has loaded
+    if (/^#languages/.test(location.hash)) {
+      const l = document.createElement('link');
+      Object.assign(l, { rel: 'preload', as: 'fetch', crossOrigin: 'anonymous', href: 'data/kin/kin.json' });
+      document.head.appendChild(l);
+    }
+  </script>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2307080d'/%3E%3Ccircle cx='16' cy='16' r='4' fill='none' stroke='%23e8c77a' stroke-width='1.6'/%3E%3Cpath d='M16 12c3-6 9-6 11-3M20 16c6 3 6 9 3 11M16 20c-3 6-9 6-11 3M12 16c-6-3-6-9-3-11' fill='none' stroke='%23e8c77a' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Gentium+Book+Plus:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="modulepreload" href="src/about.js">
+  <link rel="modulepreload" href="src/analysis.js">
+  <link rel="modulepreload" href="src/content.js">
+  <link rel="modulepreload" href="src/explore.js">
+  <link rel="modulepreload" href="src/imported.js">
+  <link rel="modulepreload" href="src/kin-addr.js">
+  <link rel="modulepreload" href="src/kin-card-lang.js">
+  <link rel="modulepreload" href="src/kin-card-pair.js">
+  <link rel="modulepreload" href="src/kin-card-word.js">
+  <link rel="modulepreload" href="src/kin-data.js">
+  <link rel="modulepreload" href="src/kin-finds.js">
+  <link rel="modulepreload" href="src/kin-labels.js">
+  <link rel="modulepreload" href="src/kin-layout.js">
+  <link rel="modulepreload" href="src/kin-mesh.js">
+  <link rel="modulepreload" href="src/kin-pairs.js">
+  <link rel="modulepreload" href="src/kin-panel-find.js">
+  <link rel="modulepreload" href="src/kin-panel-kin.js">
+  <link rel="modulepreload" href="src/kin-panel-sounds.js">
+  <link rel="modulepreload" href="src/kin-panel.js">
+  <link rel="modulepreload" href="src/kin-search.js">
+  <link rel="modulepreload" href="src/kin-select.js">
+  <link rel="modulepreload" href="src/kin-sounds.js">
+  <link rel="modulepreload" href="src/kin-stats.js">
+  <link rel="modulepreload" href="src/kin-tree.js">
+  <link rel="modulepreload" href="src/kin-ui.js">
+  <link rel="modulepreload" href="src/kin-view.js">
+  <link rel="modulepreload" href="src/kin.js">
+  <link rel="modulepreload" href="src/langs.js">
+  <link rel="modulepreload" href="src/laws.js">
+  <link rel="modulepreload" href="src/layout.js">
+  <link rel="modulepreload" href="src/main.js">
+  <link rel="modulepreload" href="src/parse.js">
+  <link rel="modulepreload" href="src/render.js">
+  <link rel="modulepreload" href="src/space-cam.js">
+  <link rel="modulepreload" href="src/space-gl.js">
+  <link rel="modulepreload" href="src/space-input.js">
+  <link rel="modulepreload" href="src/space-labels.js">
+  <link rel="modulepreload" href="src/space-layout.js">
+  <link rel="modulepreload" href="src/space-ui.js">
+  <link rel="modulepreload" href="src/space.js">
+  <link rel="modulepreload" href="src/ui.js">
+  <link rel="modulepreload" href="src/view.js">
+  <link rel="modulepreload" href="data/index.js">
+  <link rel="modulepreload" href="data/roots/beast.js">
+  <link rel="modulepreload" href="data/roots/being.js">
+  <link rel="modulepreload" href="data/roots/body.js">
+  <link rel="modulepreload" href="data/roots/kin.js">
+  <link rel="modulepreload" href="data/roots/mind.js">
+  <link rel="modulepreload" href="data/roots/motion.js">
+  <link rel="modulepreload" href="data/roots/nature.js">
+  <link rel="modulepreload" href="data/roots/number.js">
+  <link rel="modulepreload" href="data/roots/slavic.js">
+  <link rel="modulepreload" href="data/roots/wander.js">
+  <link rel="canonical" href="https://petya.games/etymon/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Etymon">
+  <meta property="og:description" content="Where words come from. Follow one word back six thousand years to its root, or see 190 languages on one globe and how their words crossed.">
+  <meta property="og:url" content="https://petya.games/etymon/">
+  <meta property="og:image" content="https://petya.games/etymon/assets/og.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+  <canvas id="base" aria-hidden="true"></canvas>
+  <canvas id="fx" role="img" aria-label="A radial graph of English. Proto-Indo-European roots sit at the centre; time runs outward; modern English words line the rim, each connected back to its root."></canvas>
+
+  <header class="masthead">
+    <h1>Etymon <button data-about class="info-btn" type="button" aria-label="About the data" title="About the data">i</button></h1>
+    <p>Six thousand years of English, grown from <span id="stat-roots">144</span> roots into <span id="stat-words">1,414</span> words.</p>
+    <button id="to-explore" class="mode-btn" type="button">Explore one word</button>
+    <button id="map-3d" class="mode-btn" type="button">See it in 3D</button>
+  </header>
+  <button id="map-back" class="map-back" type="button" aria-label="Back" hidden><span aria-hidden="true">←</span><span class="bk-t">Back</span></button>
+
+  <div class="search-wrap">
+    <input id="search" type="search" placeholder="Find a word" autocomplete="off" spellcheck="false" aria-label="Find a word" aria-controls="search-results">
+    <ul id="search-results" role="listbox" hidden></ul>
+  </div>
+
+  <button id="rail-toggle" class="rail-toggle" type="button">Laws and stories</button>
+  <aside id="rail" class="rail" aria-label="Lenses">
+    <nav id="rail-tabs" class="tabs" role="tablist"></nav>
+    <div id="rail-body" class="rail-body"></div>
+  </aside>
+
+  <aside id="journey" class="journey" hidden aria-label="Word journey">
+    <button id="journey-close" class="close" type="button" aria-label="Close">
+      <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+    </button>
+    <div id="journey-body"></div>
+  </aside>
+
+  <div id="caption" class="caption" aria-live="polite"></div>
+
+  <footer class="timeline">
+    <button id="play" class="play" type="button" aria-label="Play history">
+      <svg class="i-play" viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><path d="M6 4l10 6-10 6z" fill="currentColor"/></svg>
+      <svg class="i-pause" viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><path d="M5 4h3.5v12H5zM11.5 4H15v12h-3.5z" fill="currentColor"/></svg>
+    </button>
+    <div class="tl-main">
+      <div class="tl-labels"><span id="tl-year" class="tl-year">Now</span><span id="tl-era" class="tl-era"></span></div>
+      <div id="tl-track" class="tl-track" tabindex="0" role="slider" aria-label="Time" aria-valuemin="-4500" aria-valuemax="2025"></div>
+    </div>
+    <button id="skip" class="ghost" type="button" hidden>Skip to now</button>
+    <button id="home" class="ghost" type="button">Reset view</button>
+  </footer>
+
+  <div id="tooltip" class="tooltip" hidden></div>
+
+  <section id="explore" class="explore" aria-label="Explore one word">
+    <div class="ex-head">
+      <button id="ex-back" class="ex-back" type="button" aria-label="Back" hidden><span aria-hidden="true">←</span><span class="bk-t">Back</span></button>
+      <button id="ex-home" class="ex-title" type="button" aria-label="Etymon, start over">Etymon</button>
+      <button data-about class="info-btn" type="button" aria-label="About the data" title="About the data">i</button>
+      <form id="ex-form" class="ex-search" autocomplete="off" role="search">
+        <input id="ex-input" type="search" placeholder="Type a word you know" aria-label="Type an English or Russian word" spellcheck="false" autocapitalize="off" enterkeyhint="go">
+        <ul id="ex-suggest" class="ex-suggest" role="listbox" hidden></ul>
+      </form>
+      <div class="ex-tools">
+        <span id="ex-progress" class="ex-progress"></span>
+        <button id="ex-guess" class="ex-toggle" type="button" aria-pressed="false">Guess mode</button>
+        <button id="to-map" class="ex-map" type="button">Whole map</button>
+        <button id="to-3d" class="ex-map" type="button">3D</button>
+        <button id="to-kin" class="ex-map" type="button">Languages</button>
+      </div>
+      <p id="ex-toast" class="ex-toast" role="status" aria-live="polite"></p>
+    </div>
+    <div id="ex-landing" class="ex-landing">
+      <p class="ex-epigraph"><span>*wr̥dʰh₁om</span> <span class="arrow">→</span> <span>word</span></p>
+      <h2>Every word has a root.</h2>
+      <p>Type a word you know, in English or Russian. Etymon follows it back thousands of years to the root it grew from, then shows everything else that grew from that root.</p>
+      <div id="ex-try" class="ex-try"></div>
+      <p id="ex-stats" class="ex-stats"></p>
+      <div class="ex-landing-actions">
+        <button id="surprise" class="primary" type="button">Show me a surprising word</button>
+        <button id="ex-landing-map" class="ghost" type="button">See the whole map</button>
+        <button id="ex-landing-3d" class="ghost" type="button">Fly through it in 3D</button>
+        <button id="ex-landing-kin" class="ghost" type="button">See how the languages cross</button>
+      </div>
+    </div>
+    <div id="ex-main" class="ex-main" hidden>
+      <div id="ex-tree" class="ex-tree"></div>
+      <aside id="ex-card" class="ex-card" aria-live="polite"></aside>
+    </div>
+  </section>
+
+  <section id="space" class="space" aria-label="Etymon in three dimensions">
+    <canvas id="sp-gl" role="img" aria-label="English as a glowing three-dimensional tree. The oldest roots sit at the core; time runs outward; every point is a word."></canvas>
+    <canvas id="sp-labels" aria-hidden="true"></canvas>
+    <div class="sp-bar">
+      <button id="sp-back" class="ex-back" type="button" aria-label="Back" hidden><span aria-hidden="true">←</span><span class="bk-t">Back</span></button>
+      <button id="sp-home" class="ex-title" type="button" aria-label="Etymon, reset the view">Etymon <em>in depth</em></button>
+      <button data-about class="info-btn" type="button" aria-label="About the data" title="About the data">i</button>
+      <form id="sp-form" class="sp-search" autocomplete="off" role="search">
+        <input id="sp-input" type="search" placeholder="Find a word" aria-label="Find a word" spellcheck="false" autocapitalize="off" enterkeyhint="go">
+        <ul id="sp-suggest" class="ex-suggest" role="listbox" hidden></ul>
+      </form>
+      <div class="sp-tools">
+        <button id="sp-fam" class="ex-toggle" type="button" aria-pressed="false">Colour by family</button>
+        <button id="sp-replay" class="ex-toggle" type="button">Replay growth</button>
+        <button id="sp-explore" class="ex-map" type="button">Explore</button>
+        <button id="sp-map" class="ex-map" type="button">Map</button>
+        <button id="sp-kin" class="ex-map" type="button">Languages</button>
+      </div>
+    </div>
+    <div id="sp-year" class="sp-year" aria-hidden="true" hidden></div>
+    <div id="sp-legend" class="sp-legend" hidden></div>
+    <p id="sp-hint" class="sp-hint" hidden>Drag to turn · scroll to fly in · click any word</p>
+    <aside id="sp-card" class="sp-card" aria-live="polite" hidden></aside>
+    <p id="sp-fail" class="sp-fail" hidden>This view needs WebGL 2, which this browser did not provide. The map and Explore still work.</p>
+  </section>
+
+  <section id="kin" class="space kin" aria-label="Languages, and how they cross">
+    <canvas id="kn-gl" role="img" aria-label="A globe of languages. Every point is a word. Each language is a patch of the surface with its ancestors underneath; an arc is a word taken from one language into another."></canvas>
+    <canvas id="kn-labels" aria-hidden="true"></canvas>
+    <div class="sp-bar">
+      <button id="kn-back" class="ex-back" type="button" aria-label="Back" hidden><span aria-hidden="true">←</span><span class="bk-t">Back</span></button>
+      <button id="kn-home" class="ex-title" type="button" aria-label="Etymon, reset the view">Etymon <em>languages</em></button>
+      <button id="kn-about" aria-pressed="false" class="info-btn" type="button" aria-label="About the data" title="About the data">i</button>
+      <form id="kn-form" class="sp-search" autocomplete="off" role="search">
+        <input id="kn-input" type="search" placeholder="Find a word or a language" aria-label="Find a word or a language" spellcheck="false" autocapitalize="off" enterkeyhint="go">
+        <ul id="kn-suggest" class="ex-suggest" role="listbox" hidden></ul>
+      </form>
+      <div class="sp-tools">
+        <button id="kn-find" class="ex-toggle" type="button" aria-pressed="false">Findings</button>
+        <button id="kn-matrix" class="ex-toggle" type="button" aria-pressed="false">Kinship</button>
+        <button id="kn-sounds" class="ex-toggle" type="button" aria-pressed="false">Sounds</button>
+        <button id="kn-replay" class="ex-toggle" type="button">Replay growth</button>
+        <button id="kn-explore" class="ex-map" type="button">Explore</button>
+        <button id="kn-3d" class="ex-map" type="button">3D</button>
+      </div>
+    </div>
+    <div id="kn-year" class="sp-year" aria-hidden="true" hidden></div>
+    <div id="kn-legend" class="sp-legend kn-legend" hidden></div>
+    <p id="kn-hint" class="sp-hint" hidden>Drag to turn · scroll to fly in · click a language or a word</p>
+    <aside id="kn-card" class="sp-card kn-card" aria-live="polite" hidden></aside>
+    <aside id="kn-panel" class="kn-panel" aria-label="Findings, the kinship table and the sound laws" hidden></aside>
+    <p id="kn-load" class="sp-fail">Gathering the languages…</p>
+    <p id="kn-fail" class="sp-fail" hidden>This view needs WebGL 2, which this browser did not provide. The map and Explore still work.</p>
+  </section>
+
+  <div id="about" class="about" hidden></div>
+
+  <noscript><p style="position:fixed;inset:auto 0 45% 0;text-align:center;color:#b9b4a8">Etymon draws with JavaScript. Turn it on to explore.</p></noscript>
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>
