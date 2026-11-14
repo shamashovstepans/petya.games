@@ -112,6 +112,15 @@ a.tile__link:hover .tile__title { text-decoration: underline; }
 .tile__foot:empty { display: none; }
 
 .tile__badge { color: var(--ink-2); font-size: 14px; font-weight: 600; }
+/* news about a game (a wider release): a pill in its accent */
+.tile__badge--new {
+  padding: 6px 11px;
+  border-radius: 99px;
+  background: color-mix(in srgb, var(--accent) 30%, transparent);
+  color: var(--ink);
+  font-size: 13px;
+  line-height: 1;
+}
 
 /* An item with no clip yet: a dashed slot the size of a phone, with a small branching drawing in it */
 .slot {
@@ -536,35 +545,54 @@ body.game {
   object-fit: cover;
 }
 
-/* ---------- On your computer (library): web items, apart from the phone games, in their own colours ---------- */
+/* ---------- Shelves (library): a heading over each kind, phone games first, then things for a computer ---------- */
+
+.shelf-title { margin: 0 0 clamp(16px, 2.6vw, 26px); font-size: clamp(22px, 2.4vw, 28px); font-weight: 700; letter-spacing: -0.01em; }
+
+/* ---------- On your computer (library): web items as a shelf of cards, each in its own colours ---------- */
+/* Cards fill rows of up to three and wrap into new rows as games are added, like boxes on a shop's shelves */
 
 .desk { padding-bottom: clamp(48px, 8vw, 96px); }
-.desk__title { margin: 0 0 clamp(16px, 2.6vw, 26px); font-size: clamp(22px, 2.4vw, 28px); font-weight: 700; letter-spacing: -0.01em; }
+.desk__shelf {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+  gap: clamp(20px, 2.6vw, 32px);
+}
 
 .feature {
-  display: grid;
-  gap: clamp(22px, 3vw, 44px);
-  padding: clamp(16px, 3.4vw, 44px);
-  border-radius: clamp(22px, 2.6vw, 34px);
+  display: flex;
+  flex-direction: column;
+  border-radius: clamp(20px, 2.2vw, 28px);
   background: var(--bg);
   color: var(--ink);
-  box-shadow: 0 28px 60px -28px color-mix(in srgb, var(--accent) 55%, transparent);
+  box-shadow: 0 22px 44px -26px color-mix(in srgb, var(--accent) 60%, transparent);
+  transition: transform 0.25s, box-shadow 0.25s;
 }
-@media (min-width: 900px) {
-  .feature { grid-template-columns: minmax(0, 1.75fr) minmax(0, 1fr); align-items: center; }
+@media (hover: hover) {
+  .feature:hover { transform: translateY(-4px); box-shadow: 0 30px 56px -24px color-mix(in srgb, var(--accent) 75%, transparent); }
 }
-.feature__stage { display: block; }
+/* the laptop stands on a soft light in the card's accent */
+.feature__stage {
+  display: block;
+  padding: clamp(18px, 2.4vw, 26px) clamp(14px, 1.8vw, 20px) clamp(8px, 1.2vw, 12px);
+  border-radius: inherit;
+  background: radial-gradient(75% 65% at 50% 45%, color-mix(in srgb, var(--accent) 20%, transparent), transparent 72%);
+}
 .feature .laptop { --glow: color-mix(in srgb, var(--accent) 45%, transparent); }
-.feature__text { padding-inline: clamp(4px, 1vw, 8px); }
-.feature__icon { display: block; width: 56px; height: 56px; border-radius: 22%; }
-.feature__title { margin: 16px 0 0; font-size: clamp(32px, 3.8vw, 46px); font-weight: 800; font-stretch: 85%; letter-spacing: -0.03em; line-height: 1; }
+.feature__text { display: flex; flex: 1; flex-direction: column; padding: 8px clamp(16px, 2vw, 22px) clamp(18px, 2.2vw, 22px); }
+.feature__head { display: flex; align-items: center; gap: 12px; }
+.feature__icon { display: block; flex: none; width: 44px; height: 44px; border-radius: 22%; }
+.feature__title { margin: 0; font-size: clamp(22px, 2vw, 26px); font-weight: 800; font-stretch: 85%; letter-spacing: -0.02em; line-height: 1.05; }
 .feature__title a { text-decoration: none; }
 @media (hover: hover) {
   .feature__title a:hover { text-decoration: underline; }
 }
-.feature__line { margin: 12px 0 0; font-size: clamp(17px, 1.7vw, 19px); line-height: 1.35; }
-.feature__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 14px; margin-top: 24px; }
-.feature__note { margin: 12px 0 0; color: var(--soft); font-size: 14.5px; }
+.feature__line { margin: 12px 0 0; font-size: 15.5px; line-height: 1.4; }
+.feature__note { margin: 8px 0 0; color: var(--soft); font-size: 13.5px; line-height: 1.35; }
+/* buttons sit on the card's floor, so a row of cards lines them up */
+.feature__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: auto; padding-top: 18px; }
+.feature .open-web { min-height: 44px; padding: 0 16px 0 18px; font-size: 15.5px; }
+.feature .like--big { height: 44px; }
 
 /* ---------- Company structure (bottom of the library) ---------- */
 
