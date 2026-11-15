@@ -62,16 +62,83 @@ a { color: inherit; text-underline-offset: 0.2em; text-decoration-thickness: 1.5
 
 /* ---------- Library (home) ---------- */
 
-.intro { padding-block: clamp(28px, 7vw, 76px) clamp(28px, 5vw, 56px); }
+/* The library sits on dotted paper: a faint grid in ink, like a notebook page games get sketched on */
+body.home {
+  background:
+    radial-gradient(circle at 1px 1px, color-mix(in srgb, var(--ink) 14%, transparent) 1.1px, transparent 1.7px) 11px 11px / 22px 22px,
+    var(--paper);
+}
 
-.logo { margin: 0 0 clamp(18px, 2.4vw, 28px); color: var(--brand); line-height: 0; }
-.logo svg { display: block; width: clamp(104px, 12vw, 148px); height: auto; overflow: visible; }
+.intro {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(24px, 5vw, 64px);
+  padding-block: clamp(28px, 7vw, 84px) clamp(36px, 6vw, 72px);
+}
+
+.logo { margin: 0; color: var(--brand); line-height: 0; }
+.logo svg { display: block; width: clamp(96px, 13vw, 168px); height: auto; overflow: visible; }
 
 .intro__line {
   margin: 0;
-  max-width: 30ch;
-  font-size: clamp(19px, 2.3vw, 25px);
-  line-height: 1.3;
+  max-width: 18ch;
+  font-size: clamp(30px, 5vw, 60px);
+  font-weight: 720;
+  font-stretch: 96%;
+  line-height: 1.04;
+  letter-spacing: -0.022em;
+  text-wrap: balance;
+}
+
+/* "small", underlined by hand in the logo's marker red */
+.scribble {
+  padding-bottom: 0.06em;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 14' preserveAspectRatio='none'%3E%3Cpath d='M3 9.5C22 5.5 48 4 70 5.2c15 .8 30 2.4 46 .4M14 12c20-2.6 46-3.4 78-1.6' fill='none' stroke='%23e3342f' stroke-width='3.2' stroke-linecap='round'/%3E%3C/svg%3E") left bottom / 100% 0.28em no-repeat;
+}
+
+.intro__sub { margin: clamp(10px, 1.4vw, 16px) 0 0; color: var(--ink-2); font-size: clamp(16px, 1.6vw, 19px); }
+
+/* Every game's icon in a row under the line: a quick way in, and a count of what's on the shelves */
+.dock { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: clamp(18px, 2.6vw, 28px); }
+.dock__app { position: relative; display: block; border-radius: 24%; line-height: 0; }
+.dock__app img {
+  display: block;
+  width: clamp(42px, 4.6vw, 52px);
+  height: auto;
+  border-radius: 24%;
+  box-shadow: 0 1px 0 rgb(255 255 255 / 0.6) inset, 0 6px 14px -6px color-mix(in srgb, var(--accent) 70%, rgb(21 25 37 / 0.4));
+  transition: transform 0.2s cubic-bezier(0.3, 1.4, 0.5, 1);
+}
+.dock__gap { width: 1.5px; height: 28px; margin-inline: 4px; border-radius: 2px; background: var(--line); }
+/* the name floats above an icon while it is pointed at */
+.dock__name {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  padding: 5px 9px;
+  border-radius: 8px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate(-50%, 4px);
+  transition: opacity 0.15s, transform 0.15s;
+  pointer-events: none;
+}
+@media (hover: hover) {
+  .dock__app:hover img { transform: translateY(-4px) rotate(-4deg); }
+  .dock__app:hover .dock__name { opacity: 1; transform: translate(-50%, 0); }
+}
+.keyboard .dock__app:focus-visible .dock__name { opacity: 1; transform: translate(-50%, 0); }
+.dock__app:active img { transform: scale(0.92); }
+
+@media (max-width: 640px) {
+  .intro { grid-template-columns: minmax(0, 1fr); gap: 22px; }
+  .logo svg { width: 92px; }
 }
 
 .intro__links { display: flex; flex-wrap: wrap; gap: 6px 20px; margin: 12px 0 0; }
@@ -90,7 +157,8 @@ a { color: inherit; text-underline-offset: 0.2em; text-decoration-thickness: 1.5
 
 .tile { display: flex; flex-direction: column; }
 
-.tile__link { display: block; color: inherit; text-decoration: none; }
+/* the link grows to the tile's full height, so hearts line up whether a line takes one row or two */
+.tile__link { display: block; flex: 1; color: inherit; text-decoration: none; }
 
 .tile__stage { margin-bottom: 16px; }
 .tile .phone-wrap { width: 86%; }
@@ -112,15 +180,6 @@ a.tile__link:hover .tile__title { text-decoration: underline; }
 .tile__foot:empty { display: none; }
 
 .tile__badge { color: var(--ink-2); font-size: 14px; font-weight: 600; }
-/* news about a game (a wider release): a pill in its accent */
-.tile__badge--new {
-  padding: 6px 11px;
-  border-radius: 99px;
-  background: color-mix(in srgb, var(--accent) 30%, transparent);
-  color: var(--ink);
-  font-size: 13px;
-  line-height: 1;
-}
 
 /* An item with no clip yet: a dashed slot the size of a phone, with a small branching drawing in it */
 .slot {
@@ -132,6 +191,48 @@ a.tile__link:hover .tile__title { text-decoration: underline; }
   color: var(--ink-2);
 }
 .slot::before { content: ""; display: block; aspect-ratio: 9 / 19.5; }
+/* The empty place at the end of the phone shelf: a hand-drawn question mark, and a way to ask for a game */
+.slot__art {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 62cqi;
+  height: 62cqi;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 4.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.slot__dot { fill: currentColor; stroke: none; }
+.slot__spark { stroke: var(--brand); stroke-width: 3.2; }
+.tile--next .slot { outline-color: var(--line-strong); background: color-mix(in srgb, var(--paper) 70%, transparent); }
+@media (prefers-reduced-motion: no-preference) {
+  .slot__art { animation: slot-bob 3.2s ease-in-out infinite; transform-origin: 50% 60%; }
+}
+@keyframes slot-bob {
+  50% { transform: translateY(-3%) rotate(-3deg); }
+}
+.tile--next .tile__title { color: var(--ink-2); }
+
+.suggest {
+  display: inline-flex;
+  align-items: center;
+  height: 34px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 99px;
+  background: var(--ink);
+  color: var(--paper);
+  font: 650 14px/1 var(--font);
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+.suggest:active { transform: scale(0.95); }
+@media (hover: hover) {
+  .suggest:hover { transform: translateY(-1px); }
+}
+
 .mycelium {
   position: absolute;
   top: 9cqi;
@@ -547,7 +648,31 @@ body.game {
 
 /* ---------- Shelves (library): a heading over each kind, phone games first, then things for a computer ---------- */
 
-.shelf-title { margin: 0 0 clamp(16px, 2.6vw, 26px); font-size: clamp(22px, 2.4vw, 28px); font-weight: 700; letter-spacing: -0.01em; }
+/* a heading, how many are on the shelf, then the shelf's edge running to the side of the page */
+.shelf-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 clamp(16px, 2.6vw, 26px);
+  font-size: clamp(22px, 2.4vw, 28px);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.shelf-title::after { content: ""; flex: 1; height: 1.5px; margin-left: 6px; border-radius: 2px; background: var(--line); }
+.shelf-title__count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 8px;
+  border-radius: 99px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0;
+  font-variant-numeric: tabular-nums;
+}
 
 /* ---------- On your computer (library): web items as a shelf of cards, each in its own colours ---------- */
 /* Cards fill rows of up to three and wrap into new rows as games are added, like boxes on a shop's shelves */

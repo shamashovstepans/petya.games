@@ -8,6 +8,7 @@
   if (!opener || !dialog) return;
   if (!API || !window.fetch || !dialog.showModal) {
     opener.remove(); // nowhere to send it, or no way to show the form
+    for (const b of document.querySelectorAll("[data-feedback]")) b.remove();
     return;
   }
   const form = dialog.querySelector(".feedback__form");
@@ -33,6 +34,15 @@
     dialog.showModal();
     message.focus();
   });
+
+  // Other buttons on the page (Suggest a game) open the same form, on the topic they name unless there is a draft
+  for (const b of document.querySelectorAll("[data-feedback]")) {
+    b.addEventListener("click", () => {
+      opener.click();
+      const chip = form.querySelector(`input[name="topic"][value="${b.dataset.feedback}"]`);
+      if (chip && !message.value) chip.checked = true;
+    });
+  }
 
   // The dialog has no padding of its own, so a click lands on it only outside the form: the backdrop
   dialog.addEventListener("click", (e) => {
